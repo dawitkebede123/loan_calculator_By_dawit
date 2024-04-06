@@ -1,0 +1,66 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+h1{
+  background-image: linear-gradient(to right, #4d1261, #59d3d2);
+  color: transparent;
+  background-clip: text;
+  width: 400px;
+  font-size: 40px;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+}
+
+h3{
+ width: 50%;
+ color: #4d1261;
+ font-weight: normal;
+ font-size: 26px;
+ font-family: 'Arial', sans-serif;
+ line-height: 1.5;
+ 
+}
+.total_interest{
+  color: #4d1261;
+}
+.separator{
+  width: 600px;
+  height: 50px;
+}
+.calculator-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content:space-between;
+  width: 100%;
+  margin: auto;
+}
+.input-section, .summary-section {
+  padding: 20px;
+}
+input{
+  height: 45px;
+  margin-top: 15px;
+  border-radius: 10px;
+  border:1px solid black;
+  font-size: 15px;
+
+}
+.input-section {
+  width: 50%;
+}
+.summary-section {
+  width: 40%;
+  background-color: #f2f2f2;
+}
+input {
+  width: 100%;
+}
+.summary-section h2 {
+  font-size: 24px;
+  color: #333;
+}
+.summary-section p {
+  font-size: 18px;
+  color: #666;
+}

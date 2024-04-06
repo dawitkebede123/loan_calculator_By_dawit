@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- <link rel="stylesheet" href="./assets/css/style.css"> -->
+<script src="./assets/js/loan-calculator.js"></script>
+<title>Loan Calculator</title>
+</head>
+
+<body style="font-family: Arial, sans-serif;margin: 20px;padding: 0;">
+  <h1 style="background-image: linear-gradient(to right, #4d1261, #59d3d2);color: transparent;background-clip: text;width: 400px;font-size: 40px;font-family: 'Arial', sans-serif;font-weight: bold;">Loan Calculator</h1>
+  <h3 style="max-width: 600px; color: #4d1261;font-weight: normal;font-size: 26px;font-family: 'Arial', sans-serif;line-height: 1.5;">Fill the loan amount, interest rate, and loan term and it will automatically calculate monthly payment, total interest, and total principal and interest amount</h3> 
+  <div style=" width: 600px;height: 50px;"></div>
+  <!-- grid container -->
+  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));grid-gap: 10px; padding: 10px; ">
+  <div style="padding: 20px;">
+    <label for="loan-amount">
+      Loan Amount
+      <span style="color:red;">*<span>
+       </label>
+    <input type="text" style="width: 100%;height: 45px;margin-top: 15px;border-radius: 10px;border:1px solid black;font-size: 15px;" id="loan-amount" placeholder="500,000 Br" oninput="calculateLoan(document.getElementById('loan-amount').value, document.getElementById('interest-rate').value, document.getElementById('loan-term').value)" required>
+    
+    <label for="interest-rate">
+      Interest Rate 
+      <span style="color:red;">*<span>
+    </label>
+    <input type="text" style="width: 100%;height: 45px;margin-top: 15px;border-radius: 10px;border:1px solid black;font-size: 15px;" id="interest-rate" placeholder="15%" oninput="calculateLoan(document.getElementById('loan-amount').value, document.getElementById('interest-rate').value, document.getElementById('loan-term').value)" required>
+    
+    <label for="loan-term">
+      Loan Term in Months 
+      <span style="color:red;">*<span>
+    </label>
+    <input type="text" style="width: 100%;height: 45px;margin-top: 15px;border-radius: 10px;border:1px solid black;font-size: 15px;" id="loan-term" value="60" oninput="calculateLoan(document.getElementById('loan-amount').value, document.getElementById('interest-rate').value, document.getElementById('loan-term').value)" required>
+ 
+  </div>
+
+  <div class="summary-section" style="padding: 20px;background-color: #f2f2f2; border-radius: 10px;">
+    <h2 style="font-size: 24px;color: #5b5b5b;">Monthly Payment</h2>
+    <h1 id="monthly_payment" style="background-image: linear-gradient(to right, #4d1261, #59d3d2);color: transparent;background-clip: text;width: 80%;font-size: 40px;font-family: 'Arial', sans-serif;font-weight: bold;">11,894.97 Br</h1>
+    <!-- inner container -->
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));grid-gap: 20px; ">
+       <div style="padding: 20px;">
+    <p style="font-size: 18px;color: #666;">Total Interest</p>
+    <h3 id="total_interest" style="color: #4d1261;color: #4d1261;font-weight: normal;font-size: 26px;font-family: 'Arial', sans-serif;line-height: 1.5;">213,697.9 Br</h3>
+       </div>
+       <div style="padding: 20px;">
+    <p style="font-size: 18px;color: #666;">Total Principal & Interest</p>
+    <h3 id="total_principal" style="color: #4d1261;font-weight: normal;font-size: 26px;font-family: 'Arial', sans-serif;line-height: 1.5;">713,697.9 Br</h3>
+      </div>
+  </div>
+  </div>
+</div>
+
+<script>
+  function calculateLoan(loanAmount, annualInterestRate, loanTermMonths) {
+    const regex = /[\d.]+/g;
+  //  avoiding non numeric character
+   loanAmount = loanAmount.match(regex)?.join('');
+   annualInterestRate = annualInterestRate.match(regex)?.join('');
+   loanTermMonths = loanTermMonths.match(regex)?.join('');
+  //  formating a number
+   const formatted_loan_amount = Intl.NumberFormat().format(loanAmount)
+   if(formatted_loan_amount == 'NaN'){
+    document.getElementById('loan-amount').value = '0'
+   }
+   else{
+    document.getElementById('loan-amount').value = `${formatted_loan_amount} Br`
+   }
+   
+
+   const formatted_annual_interest_rate = Intl.NumberFormat().format(annualInterestRate)
+   if(formatted_annual_interest_rate == 'NaN'){
+    document.getElementById('interest-rate').value = '0'
+   }
+   else{
+    document.getElementById('interest-rate').value = `${formatted_annual_interest_rate} %`
+   }
+
+  const formatted_loan_term_months = Intl.NumberFormat().format(loanTermMonths)
+
+  if(formatted_loan_term_months == 'NaN'){
+    document.getElementById('loan-term').value = `0`
+   }
+   else{
+    document.getElementById('loan-term').value = formatted_loan_term_months
+   }
+  
+  
+  // Convert annual interest rate to a monthly rate
+  let monthlyInterestRate = (annualInterestRate / 100) / 12;
+  
+  // Calculate the monthly payment
+  let monthlyPayment = loanAmount * monthlyInterestRate / 
+    (1 - Math.pow(1 + monthlyInterestRate, -loanTermMonths));
+  
+  // Calculate the total payment over the loan term
+  let totalPayment = monthlyPayment * loanTermMonths;
+  
+  // Calculate the total interest paid
+  let totalInterest = totalPayment - loanAmount;
+    
+
+  
+    monthlyPayment= monthlyPayment.toFixed(2),
+    totalInterest= totalInterest.toFixed(2),
+    totalPrincipalAndInterest= totalPayment.toFixed(2)
+    let monthly = document.getElementById("monthly_payment")
+//  formating monthly payment
+const formatted_monthly_payment = Intl.NumberFormat().format(monthlyPayment)
+monthly.innerText = `${formatted_monthly_payment} Br`
+//  formating totalInterest
+     let total_interest = document.getElementById("total_interest")
+ const formatted_total_interest = Intl.NumberFormat().format(totalInterest)
+ total_interest.innerText = `${formatted_total_interest} Br`  
+// formating totalPrincipalAndInterest
+ let total_principle = document.getElementById("total_principal")
+ const formatted_total_principle = Intl.NumberFormat().format(totalPrincipalAndInterest)
+ total_principle.innerText = `${formatted_total_principle} Br`
+}
+</script>
+
+</body>
+</html>
